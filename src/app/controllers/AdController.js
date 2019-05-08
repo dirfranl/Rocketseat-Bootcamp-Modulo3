@@ -26,9 +26,10 @@ class AdController {
        */
       filters.title = new RegExp(req.query.title, 'i')
     }
-    // para listar junto do Ads o autor no find usamos Ad,populate.find()
-    // no paginate est'opção vai dentro do objeto
-    // const ads = await Ad.find()
+    // para listar junto do Ads o autor no find usamos Ad.find().populate
+    // no paginate está opção vai dentro do objeto
+    // const ads = await Ad.find().populate('author')
+
     const ads = await Ad.paginate(filters, {
       page: req.query.page || 1,
       limit: 20,
@@ -53,14 +54,14 @@ class AdController {
   }
 
   async update (req, res) {
-    const ad = await Ad.findOneAndUpdate(req.params.id, req.body, {
+    const ad = await Ad.findByIdAndUpdate(req.params.id, req.body, {
       new: true // devolve para o front já atualizado
     })
     return res.json(ad)
   }
 
   async destroy (req, res) {
-    await Ad.findOneAndDelete(req.params.id)
+    await Ad.findByIdAndDelete(req.params.id)
     return res.json()
   }
 }
